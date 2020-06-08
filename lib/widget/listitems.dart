@@ -4,34 +4,38 @@ import 'package:provider/provider.dart';
 import 'package:providers/models/provider.dart';
 import 'package:providers/models/todo.dart';
 
+import '../models/provider.dart';
+import '../models/todo.dart';
+
 class Listitem extends StatefulWidget {
   @override
   _ListitemState createState() => _ListitemState();
 }
 
 class _ListitemState extends State<Listitem> {
-  static ToDo toDos;
-  var tasklist = Provider.value(value: TodoProvider().getTodos(toDos));
   @override
   Widget build(BuildContext context) {
-    if (toDos == null) {
-      return Container(
-        child: Center(
-            child: Text(
-          "You Do Not Have Any Task Scheduled For Today",
-          style: TextStyle(
-              fontWeight: FontWeight.w800,
-              color: Colors.blue,
-              fontSize: 25),
-        )),
-      );
-    } else {
-      return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Slidable(
-            child: Text("${toDos.title}"),
-            actionPane: SlidableDrawerActionPane()),
-      );
-    }
+    return FutureBuilder<List<ToDo>>(
+      future: Provider.of<TodoProvider>(context).getTodos(),
+      builder: (BuildContext context, AsyncSnapshot<List<ToDo>> snapshot) {
+        if (snapshot.data == null || snapshot.data.isEmpty) {
+          return Container(
+            child: Center(
+              child: Text(
+                "You Do Not Have Any Task Scheduled For Today",
+                style: TextStyle(fontWeight: FontWeight.w800, color: Colors.blue, fontSize: 25),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        } else if (snapshot.hasData) {
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            child: Slidable(child: Text("${snapshot.data[1].title}"), actionPane: SlidableDrawerActionPane()),
+          );
+        } else
+          return Container();
+      },
+    );
   }
 }

@@ -2,13 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:providers/models/todo.dart';
 import 'package:providers/utils/db.dart';
 
+import '../utils/db.dart';
+import 'todo.dart';
+
 class TodoProvider extends ChangeNotifier {
-  ToDodb db;
+  ToDodb db = ToDodb(); // A better substitute is to use these as Dependency Injection
   List<ToDo> todoList;
-  Future getTodos([ToDo toDos]) async {
-    List<ToDo> todos = await db.getTodos();
-    todoList = todos;
-    notifyListeners();
+
+  Future<List<ToDo>> getTodos([ToDo toDos]) async {
+    return await db.getTodos();
   }
 
   List<ToDo> returnTodos(toDos) {
@@ -25,14 +27,14 @@ class TodoProvider extends ChangeNotifier {
   }
 
 //function to update todos
-   updateTodo(ToDo todo) async {
+  updateTodo(ToDo todo) async {
     db.updateTodo(todo).then((result) {
       getTodos();
     });
     notifyListeners();
   }
 
- addTodo(ToDo toDo) async {
+  addTodo(ToDo toDo) async {
     db.insertTodo(toDo).then((result) {
       getTodos();
     });
