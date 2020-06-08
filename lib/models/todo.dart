@@ -5,23 +5,13 @@ class ToDo {
   String title;
   int priority;
 
-  ToDo(this.description, this.title, this.completeBy, this.priority);
+  ToDo({this.description, this.title, this.completeBy, this.priority});
 
   Map<String, dynamic> toMap() {
-    return {
-      'completeBy': completeBy,
-      'priority': priority,
-      'description': description,
-      'title': title
-    };
+    return {'completeBy': completeBy, 'priority': priority, 'description': description, 'title': title};
   }
 
   static ToDo fromMap(Map<String, dynamic> map) {
-    return ToDo(
-      map['completeBy'],
-      map['priority'],
-      map['title'],
-      map['description'],
-    );
+    return ToDo(description: map['completeBy'], title: map['title'], completeBy: map['description'], priority: map['priority']);
   }
 }

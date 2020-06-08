@@ -1,11 +1,12 @@
-import 'package:providers/models/todo.dart';
-import 'package:sembast/sembast.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:providers/models/todo.dart';
+import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 class ToDodb {
   static final ToDodb _singleton = ToDodb._internal();
+
   ToDodb._internal();
 
   factory ToDodb() {
@@ -27,8 +28,7 @@ class ToDodb {
   Future _openDb() async {
     final docspath = await getApplicationDocumentsDirectory();
     final dbpath = join(docspath.path, 'todos.db');
-    final db = await dbFactory.openDatabase(dbpath);
-    return db;
+    return await dbFactory.openDatabase(dbpath);
   }
 
 //deleting the task from all the tasks
@@ -53,8 +53,7 @@ class ToDodb {
 //getting the list of the items
   Future<List<ToDo>> getTodos() async {
     await database;
-    final finder =
-        Finder(sortOrders: [SortOrder('priority'), SortOrder('taskId')]);
+    final finder = Finder(sortOrders: [SortOrder('priority'), SortOrder('taskId')]);
     final todoSnapshot = await store.find(_database, finder: finder);
 
     return todoSnapshot.map((snapshot) {
